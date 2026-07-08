@@ -164,7 +164,8 @@ if st.button(TEXT["predict_button"], use_container_width=True):
             prediction = result["prediction"]
 
             probability = result["probability"]
-                        st.subheader(TEXT["prediction_result"])
+            
+            st.subheader(TEXT["prediction_result"])
 
             if prediction == 1:
 
