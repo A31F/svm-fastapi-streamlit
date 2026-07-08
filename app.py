@@ -11,38 +11,172 @@ import streamlit as st
 import requests
 
 st.set_page_config(
-    page_title="SVM Prediction",
+    page_title="Breast Cancer Prediction",
+    page_icon="🩺",
     layout="wide"
 )
 
-st.title("Breast Cancer Prediction")
+# =========================
+# SIDEBAR
+# =========================
 
-st.write("Input 30 Feature")
+st.sidebar.title("🩺 Breast Cancer AI")
 
-inputs=[]
+st.sidebar.info(
+    """
+    **Algorithm**
+    - Support Vector Machine (SVM)
 
-for i in range(30):
+    **Dataset**
+    - Breast Cancer Wisconsin Diagnostic
 
-    value=st.number_input(f"Feature {i+1}")
+    **Input Features**
+    - 30 Diagnostic Features
 
-    inputs.append(value)
+    **Output**
+    - Benign
+    - Malignant
+    """
+)
 
-if st.button("Predict"):
+# =========================
+# HEADER
+# =========================
 
-    url="https://svm-fastapi-streamlit-production-1a6a.up.railway.app/predict"
+st.title("🩺 Breast Cancer Prediction System")
 
-    response=requests.post(
+st.markdown(
+    """
+    Artificial Intelligence system using **Support Vector Machine (SVM)**
+    to classify breast tumors based on diagnostic measurements.
 
-        url,
+    Please enter all feature values below.
+    """
+)
 
-        json={
-            "features":inputs
-        }
+# =========================
+# FEATURE NAMES
+# =========================
 
-    )
+features = [
+    "Mean Radius",
+    "Mean Texture",
+    "Mean Perimeter",
+    "Mean Area",
+    "Mean Smoothness",
+    "Mean Compactness",
+    "Mean Concavity",
+    "Mean Concave Points",
+    "Mean Symmetry",
+    "Mean Fractal Dimension",
 
-    hasil=response.json()
+    "Radius Error",
+    "Texture Error",
+    "Perimeter Error",
+    "Area Error",
+    "Smoothness Error",
+    "Compactness Error",
+    "Concavity Error",
+    "Concave Points Error",
+    "Symmetry Error",
+    "Fractal Dimension Error",
 
-    st.success(f"Prediction : {hasil['prediction']}")
+    "Worst Radius",
+    "Worst Texture",
+    "Worst Perimeter",
+    "Worst Area",
+    "Worst Smoothness",
+    "Worst Compactness",
+    "Worst Concavity",
+    "Worst Concave Points",
+    "Worst Symmetry",
+    "Worst Fractal Dimension"
+]
 
-    st.metric("Probability",f"{hasil['probability']:.2%}")
+# =========================
+# INPUTS
+# =========================
+
+col1, col2, col3 = st.columns(3)
+
+inputs = []
+
+for i in range(10):
+    with col1:
+        value = st.number_input(
+            features[i],
+            value=0.0,
+            format="%.5f"
+        )
+        inputs.append(value)
+
+for i in range(10, 20):
+    with col2:
+        value = st.number_input(
+            features[i],
+            value=0.0,
+            format="%.5f"
+        )
+        inputs.append(value)
+
+for i in range(20, 30):
+    with col3:
+        value = st.number_input(
+            features[i],
+            value=0.0,
+            format="%.5f"
+        )
+        inputs.append(value)
+
+st.divider()
+
+# =========================
+# PREDICT BUTTON
+# =========================
+
+if st.button("🔍 Predict Tumor Type", use_container_width=True):
+
+    try:
+
+        url = "https://svm-fastapi-streamlit-production-1a6a.up.railway.app/predict"
+
+        response = requests.post(
+            url,
+            json={"features": inputs}
+        )
+
+        hasil = response.json()
+
+        prediction = hasil["prediction"]
+        probability = hasil["probability"]
+
+        st.subheader("Prediction Result")
+
+        if prediction == 1:
+
+            st.success(
+                f"🟢 BENIGN\n\nConfidence: {probability:.2%}"
+            )
+
+        else:
+
+            st.error(
+                f"🔴 MALIGNANT\n\nConfidence: {probability:.2%}"
+            )
+
+        st.progress(float(probability))
+
+        st.metric(
+            label="Model Confidence",
+            value=f"{probability:.2%}"
+        )
+
+    except Exception as e:
+
+        st.error(f"Error: {e}")
+
+st.divider()
+
+st.caption(
+    "This application is intended for educational purposes only and does not replace professional medical diagnosis."
+)
