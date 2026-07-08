@@ -28,19 +28,34 @@ def home():
     return {"status":"SVM API Running"}
 
 @app.post("/predict")
-def predict(data:InputData):
+def predict(data: InputData):
 
-    x=np.array(data.features).reshape(1,-1)
+    try:
+        print("=== REQUEST MASUK ===")
+        print(data.features)
 
-    x=scaler.transform(x)
+        x = np.array(data.features).reshape(1, -1)
+        print("Array:", x.shape)
 
-    prediction=model.predict(x)[0]
+        x = scaler.transform(x)
+        print("Scaler OK")
 
-    probability=model.predict_proba(x).max()
+        prediction = model.predict(x)[0]
+        print("Predict OK")
 
-    return{
+        probability = model.predict_proba(x).max()
+        print("Probability OK")
 
-        "prediction":int(prediction),
-        "probability":float(probability)
+        return {
+            "prediction": int(prediction),
+            "probability": float(probability)
+        }
 
-    }
+    except Exception as e:
+        import traceback
+
+        traceback.print_exc()
+
+        return {
+            "error": str(e)
+        }
