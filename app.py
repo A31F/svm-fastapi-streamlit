@@ -137,7 +137,7 @@ if st.button("🔍 Predict Tumor Type", use_container_width=True):
 
     try:
 
-        url = "https://svm-fastapi-streamlit-production-1a6a.up.railway.app/predict"
+        url = "https://sleek-phony-patience.ngrok-free.dev/predict"
 
         response = requests.post(
             url,
