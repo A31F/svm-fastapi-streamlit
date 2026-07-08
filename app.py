@@ -41,7 +41,16 @@ if st.button("Predict"):
 
     )
 
-    hasil=response.json()
+    response = requests.post(
+    url,
+    json={"features": inputs}
+    )
+
+    st.write("Status Code:", response.status_code)
+    st.write("Raw Response:", response.text)
+
+    hasil = response.json()
+    st.write("JSON:", hasil)
 
     st.success(f"Prediction : {hasil['prediction']}")
 
