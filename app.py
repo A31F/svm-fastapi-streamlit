@@ -145,7 +145,10 @@ if st.button("🔍 Predict Tumor Type", use_container_width=True):
             json={"features": inputs}
         )
 
+        st.write("Status Code:", response.status_code)
+
         hasil = response.json()
+        st.write("Response API:", hasil)
 
         prediction = hasil["prediction"]
         probability = hasil["probability"]
